@@ -4,7 +4,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "4000:4000"
     environment:
       - DATABASE_URL=postgresql://postgres:password@db:5432/mydb
       - JWT_SECRET=your_secret
