@@ -1,3 +1,5 @@
+import cors from "cors";
+import express from "express";
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -20,7 +22,10 @@ const corsOptions = {
 const app = express();
 
 app.use(helmet());
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: ["http://localhost:5173"],
+  credentials: true
+}));
 app.use(express.json({ limit: "10mb" }));
 app.use(morgan("dev"));
 
