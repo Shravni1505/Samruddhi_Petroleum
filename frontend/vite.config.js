@@ -9,7 +9,7 @@ export default defineConfig({
     strictPort: false,
     proxy: {
       "/api": {
-        target: "http://backend:4000",
+        target: "https://samruddhi-backend-k2v5.onrender.com",
         changeOrigin: true,
         secure: false,
         ws: true,
