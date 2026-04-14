@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const logger = require("./utils/logger");
 const { ensureAdminUser } = require("./utils/seedAdmin");
 
 const authRoutes = require("./routes/auth");
@@ -28,7 +29,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" }));
-app.use(morgan("dev"));
+const morganLogger = require("./utils/morganLogger");
+
+app.use(morganLogger);
+app.use(morgan("dev")); // optional: keep console logs too
 
 app.get("/health", (req, res) => {
   res.json({ ok: true });
@@ -50,8 +54,8 @@ const port = process.env.PORT || 4000;
 app.listen(port, async () => {
   try {
     await ensureAdminUser();
-    console.log(`API running on port ${port}`);
+    logger.info(`API running on port ${port}`);
   } catch (error) {
-    console.error("Failed to seed admin user", error);
+    logger.error("Failed to seed admin user: " + error.message);
   }
 });
