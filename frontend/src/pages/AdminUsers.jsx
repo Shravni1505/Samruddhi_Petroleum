@@ -17,9 +17,11 @@ export default function AdminUsers() {
 
       setListLoading(true);
       try {
-        const response = await fetch("/api/admin/users", {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
+        const response = await fetch("https://samruddhi-backend-k2v5.onrender.com/api/admin/users", {
+        headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+       }
+     });
 
         const data = await response.json().catch(() => []);
         if (response.ok) {

@@ -51,7 +51,7 @@ export default function StartShiftPage() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/shifts/create", {
+      const response = await fetch("https://samruddhi-backend-k2v5.onrender.com/api/shifts/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export default function StartShiftPage() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/shifts/create", {
+      const response = await fetch("https://samruddhi-backend-k2v5.onrender.com/api/shifts/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
