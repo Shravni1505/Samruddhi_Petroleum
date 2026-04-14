@@ -29,10 +29,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" }));
-const morganLogger = require("./utils/morganLogger");
-
+const morganLogger = require("../utils/morganLogger");
+//console.log("Morgan Logger:", morganLogger);
 app.use(morganLogger);
-app.use(morgan("dev")); // optional: keep console logs too
+//app.use(morgan("dev")); // optional: keep console logs too
 
 app.get("/health", (req, res) => {
   res.json({ ok: true });
