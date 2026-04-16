@@ -1,15 +1,18 @@
 name: CI Pipeline
 
+#code is tested before merging: trigger
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+    #GIT creates a temporary VM(here Ubuntu to run the pipeline)
 jobs:
   build:
     runs-on: ubuntu-latest
 
+#GitHub starts a PostgreSQL container inside the runner
     services:
       postgres:
         image: postgres:15
@@ -19,36 +22,43 @@ jobs:
           POSTGRES_DB: mydb
         ports:
           - 5432:5432
-        options: >-
+        options: >-                          #checks if DB is ready before using it prevents race condition
           --health-cmd="pg_isready"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
+    #GitHub clones your repo into the runner
+     #Runner now has your full project code    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       # ---------------- BACKEND ----------------
+      #installs Node.js v18 sets environment variables
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      #reads package.json installs dependencies
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm install
 
+      #reads schema.prisma generates DB client
       - name: Generate Prisma client
         working-directory: ./backend
         run: npx prisma generate
 
+      #connects to PostgreSQL (localhost) applies migrations
       - name: Run Prisma migrations
         working-directory: ./backend
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mydb
 
+      #Backend connects to CI database
       - name: Start backend (test run)
         working-directory: ./backend
         run: node src/index.js &
@@ -58,10 +68,20 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
+      #Internally uses Vite What happens bundles JS/CSS, optimizes code, outputs: frontend/dist/
       - name: Build frontend
         working-directory: ./frontend
         run: npm run build
 
-      # ---------------- DOCKER (optional) ----------------
+      # ---------------- DOCKER ----------------
+      #reads docker-compose.yml builds: backend image, frontend image
       - name: Build Docker containers
         run: docker compose build
+
+      - name: Run Backend Tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mydb
+        run: npm test
+       
+  

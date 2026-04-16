@@ -1,3 +1,4 @@
+//Node Module Loader: checks node_modules, resolves file paths, loads dependencies into memory
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -18,8 +19,10 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+//Creates: HTTP server object, middleware pipeline
 const app = express();
 
+//Request → middleware1 → middleware2 → route → response
 app.use(helmet());
 app.use(cors({
   origin: [
@@ -50,7 +53,12 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message || "Internal server error" });
 });
 
+const app = require("./app");
+//const logger = require("./utils/logger");
+const { ensureAdminUser } = require("./utils/seedAdmin");
+
 const port = process.env.PORT || 4000;
+
 app.listen(port, async () => {
   try {
     await ensureAdminUser();
@@ -59,3 +67,5 @@ app.listen(port, async () => {
     logger.error("Failed to seed admin user: " + error.message);
   }
 });
+
+module.exports = app;
