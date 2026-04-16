@@ -1,6 +1,6 @@
 //Node Module Loader: checks node_modules, resolves file paths, loads dependencies into memory
 require("dotenv").config();
-const express = require("express");
+//const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -20,7 +20,7 @@ const corsOptions = {
 };
 
 //Creates: HTTP server object, middleware pipeline
-const app = express();
+//const app = express();
 
 //Request → middleware1 → middleware2 → route → response
 app.use(helmet());
