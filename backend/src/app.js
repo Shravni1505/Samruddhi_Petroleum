@@ -1,6 +1,9 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const morganLogger = require("./utils/morganLogger");
 
 const authRoutes = require("./routes/auth");
 const shiftRoutes = require("./routes/shifts");
@@ -20,6 +23,7 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: "10mb" }));
+app.use(morganLogger);
 
 app.get("/health", (req, res) => {
   res.json({ ok: true });
@@ -30,5 +34,13 @@ app.use("/api/shifts", shiftRoutes);
 app.use("/api/mdu", mduRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/uploads", uploadRoutes);
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal server error"
+  });
+});
 
 module.exports = app;
