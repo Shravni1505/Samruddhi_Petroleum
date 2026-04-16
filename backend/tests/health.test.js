@@ -9,3 +9,4 @@ describe("Health API", () => {
     expect(res.body).toEqual({ ok: true });
   });
 });
+
