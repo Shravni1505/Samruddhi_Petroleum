@@ -34,7 +34,7 @@ export default function DashboardPage() {
                 <td>₹ 0</td>
                 <td>₹ 0</td>
                 <td>₹ 0</td>
-                <td className="text-emerald-700">Open</td>
+                <td className="text-blue-600">Open</td>
               </tr>
             </tbody>
           </table>
